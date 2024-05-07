@@ -1,0 +1,46 @@
+itch.io Isometric Dark souls Gothic
+
+Type: platformer / shooter / slasher with gothic/darksouls style
+
+1. General game info
+Characters:
+- player
+- monsters (about 4 types)
+
+Obstacles:
+- walls
+- fences
+- enemie's shields (1 type of enemy)
+
+Bonuses:
+- combos (+100pts)
+- skill shots (+150pts)
+- not taking damage (+200pts at the end of each round)
+
+Scenery:
+- about 5 diff maps (city, forest, ice, desert)
+
+Gameplay:
+- trying to survive waves of enemies with the use of provided weapons and environment
+- abilites:
+	- movement (including jumping and rolling)
+	- attacks (mele - sword + ranged - gun)(diff attacks with diff keys)
+- settings page avaliable
+
+Controls:
+- movement:
+	- walking -> wasd
+	- jump -> space
+	- roll -> shift
+- attacks:
+	- aim -> mouse
+	- mele -> left mouse-button
+	- gun shot -> right mouse-button
+
+2. Functionalities
+- health bar (1000hp)
+- killing enemies regenerates health
+- sword and gun deal different damage (sword > gun)
+- possible power-ups (random, time limited)
+- head shots deal extra damage
+- 3 difficulty settings (affects the number and types of enemies)
