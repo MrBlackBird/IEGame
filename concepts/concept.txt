@@ -1,27 +1,30 @@
 itch.io Isometric Dark souls Gothic
 
+(implementing shooting is still not certain, may go in the more true dark souls style)
+
 Type: platformer / shooter / slasher with gothic/darksouls style
 
 1. General game info
 Characters:
 - player
-- monsters (about 4 types)
+- monsters (about 4 types: weak mele, basic shooter, strong mele, boss?)
 
 Obstacles:
 - walls
 - fences
-- enemie's shields (1 type of enemy)
+- enemie's shields (1 type of enemy) ?
 
 Bonuses:
-- combos (+100pts)
-- skill shots (+150pts)
 - not taking damage (+200pts at the end of each round)
+- combos (+100pts) ?
+- skill shots (+150pts) ? (only if shooting is implemented)
 
 Scenery:
 - about 5 diff maps (city, forest, ice, desert)
+- maybe a side-scroller
 
 Gameplay:
-- trying to survive waves of enemies with the use of provided weapons and environment
+- trying to survive waves of enemies with the use of provided weapons and environment / or side s-scroller type action
 - abilites:
 	- movement (including jumping and rolling)
 	- attacks (mele - sword + ranged - gun)(diff attacks with diff keys)
