@@ -2,6 +2,7 @@
 #include <SFML/System.hpp>
 #include <memory>
 #include <vector>
+// lated add necesarry imports after spliting to multiple files
 
 // for easy handling of different animation types
 enum class AnimationType { Idle, Walking, Attacking, Rolling };
