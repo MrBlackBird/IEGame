@@ -5,7 +5,7 @@
 void Game::init_window() {
   this->window_.create(sf::VideoMode(800, 600), "Dark Souls",
                        sf::Style::Close | sf::Style::Titlebar);
-  this->window_.setFramerateLimit(140);
+  this->window_.setFramerateLimit(144);
 }
 
 const sf::RenderWindow &Game::get_window() const { return this->window_; }
