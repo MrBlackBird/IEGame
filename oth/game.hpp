@@ -27,6 +27,7 @@ public:
   void update();
   void render();
   void update_player();
+  void render_player();
 };
 
 #endif // GAME_HPP

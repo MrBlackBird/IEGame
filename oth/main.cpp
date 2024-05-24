@@ -6,7 +6,7 @@
 
 int main() {
 
-  srand(time(0));
+  srand(static_cast<unsigned>(time(0)));
   Game game;
 
   while (game.get_window().isOpen()) {
