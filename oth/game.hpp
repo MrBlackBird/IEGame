@@ -28,6 +28,7 @@ public:
   void render();
   void update_player();
   void render_player();
+  void updateCollision();
 };
 
 #endif // GAME_HPP

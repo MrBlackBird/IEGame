@@ -39,21 +39,6 @@ void Game::update() {
 
   // update player in-game
   this->update_player();
-
-  // update collisions
-  this->updateCollision();
-}
-
-void Game::updateCollision() {
-  if (this->player_->get_position().y +
-          this->player_->get_global_bounds().height >
-      this->window_.getSize().y) {
-
-    this->player_->reset_velocity_y();
-    this->player_->set_position(this->player_->get_position().x,
-                                this->window_.getSize().y -
-                                    this->player_->get_global_bounds().height);
-  }
 }
 
 void Game::render() {
