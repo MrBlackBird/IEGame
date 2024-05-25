@@ -1,6 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+// #include "backgr.hpp"
 #include "player.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -13,10 +14,12 @@ private:
   sf::RenderWindow window_;
   sf::Event event_;
   std::unique_ptr<Player> player_;
-  std::vector<std::unique_ptr<Object>> objects_;
+  // std::unique_ptr<BackGround> backGround_;
+  // std::vector<std::unique_ptr<Object>> objects_;
 
   void init_window();
   void init_player();
+  // void init_background();
 
 public:
   // constructor & destructor

@@ -37,7 +37,7 @@ void Player::init_sprite() {
   this->sprite_.setTexture(IDLEtexture_);
   this->currentFrame_ = sf::IntRect(0, 0, 120, 80);
   this->sprite_.setTextureRect(currentFrame_);
-  this->sprite_.setScale(3.f, 3.f);
+  this->sprite_.setScale(4.f, 4.f);
 }
 
 void Player::init_variables() { this->animationState_ = IDLE; }
@@ -79,6 +79,9 @@ void Player::movement() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
       this->move(-0.5f, 0.f);
       this->animationState_ = ATTACK;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+      this->move(-0.7f, 0.f);
+      this->animationState_ = ROLL;
     } else {
       this->move(-1.f, 0.f);
       this->animationState_ = LEFT;
@@ -87,19 +90,24 @@ void Player::movement() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
       this->move(0.5f, 0.f);
       this->animationState_ = ATTACK;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+      this->move(0.7f, 0.f);
+      this->animationState_ = ROLL;
     } else {
       this->move(1.f, 0.f);
       this->animationState_ = RIGHT;
     }
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
     this->move(0.f, -1.f);
     this->animationState_ = JUMP;
+
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
     this->animationState_ = ATTACK;
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-    this->move(1.f, 0.f);
+
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+    this->move(0.7f, 0.f);
     this->animationState_ = ROLL;
-    // FIX: make the roll both ways
   }
 }
 
@@ -134,7 +142,7 @@ void Player::animations() {
     }
 
     // set scale for correct sprite orientation | adjust orgin position
-    this->sprite_.setScale(3.f, 3.f);
+    this->sprite_.setScale(4.f, 4.f);
     this->sprite_.setOrigin(0.f, 0.f);
 
   } else if (this->animationState_ == LEFT) {
@@ -151,8 +159,9 @@ void Player::animations() {
       this->sprite_.setTextureRect(this->currentFrame_);
     }
 
-    this->sprite_.setScale(-3.f, 3.f);
-    this->sprite_.setOrigin(this->sprite_.getGlobalBounds().width / 3.f, 0.f);
+    this->sprite_.setScale(-4.f, 4.f);
+    this->sprite_.setOrigin(this->sprite_.getGlobalBounds().width / 4.f, 0.f);
+
   } else if (this->animationState_ == JUMP) {
     this->sprite_.setTexture(JUMPtexture_);
 
@@ -169,10 +178,23 @@ void Player::animations() {
   } else if (this->animationState_ == ATTACK) {
     this->sprite_.setTexture(ATTACKtexture_);
 
-    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.09f) {
+    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.1f) {
 
       this->currentFrame_.left += 120.f;
       if (this->currentFrame_.left >= 600.f) {
+        this->currentFrame_.left = 0;
+      }
+
+      this->animationTimer_.restart();
+      this->sprite_.setTextureRect(this->currentFrame_);
+    }
+  } else if (this->animationState_ == ROLL) {
+    this->sprite_.setTexture(ROLLtexture_);
+
+    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.07f) {
+
+      this->currentFrame_.left += 120.f;
+      if (this->currentFrame_.left >= 1320.f) {
         this->currentFrame_.left = 0;
       }
 

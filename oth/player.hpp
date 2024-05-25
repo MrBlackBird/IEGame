@@ -38,6 +38,8 @@ private:
   float maxGravitationalVelocity_;
 
   // FIX: core
+  int damage_;
+  int health_;
 
   void init_variables();
   void init_texture();

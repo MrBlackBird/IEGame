@@ -5,7 +5,7 @@
 #include <memory>
 
 void Game::init_window() {
-  this->window_.create(sf::VideoMode(800, 600), "Dark Souls",
+  this->window_.create(sf::VideoMode(1300, 900), "Dark Souls",
                        sf::Style::Close | sf::Style::Titlebar);
   this->window_.setFramerateLimit(144);
 }
@@ -16,6 +16,10 @@ void Game::init_player() {
   this->player_ = std::make_unique<Player>();
   // this->objects_.emplace_back(std::move(player_));
 }
+
+// void Game::init_background() {
+//   this->backGround_ = std::make_unique<BackGround>();
+// }
 
 void Game::update_player() {
   // for (auto &obj : objects_) {
@@ -32,6 +36,7 @@ void Game::render_objects() {
   //     obj->draw(this->window_, sf::RenderStates::Default);
   //   }
   this->player_->render(this->window_);
+  // this->backGround_->render(this->window_);
 }
 
 void Game::update() {
