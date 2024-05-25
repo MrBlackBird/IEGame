@@ -62,14 +62,21 @@ void Game::update() {
 }
 
 void Game::updateCollision() {
-  if (this->player_->get_position().y +
-          this->player_->get_global_bounds().height >
-      this->window_.getSize().y) {
+  for (auto &obj : objects_) {
+    Player *playerTemp = dynamic_cast<Player *>(obj.get());
+    if (playerTemp) {
+      if (this->player_->get_position().y +
+              this->player_->get_global_bounds().height >
+          this->window_.getSize().y) {
 
-    this->player_->reset_velocity_y();
-    this->player_->set_position(this->player_->get_position().x,
-                                this->window_.getSize().y -
-                                    this->player_->get_global_bounds().height);
+        this->player_->reset_velocity_y();
+        this->player_->set_position(
+            this->player_->get_position().x,
+            this->window_.getSize().y -
+                this->player_->get_global_bounds().height);
+        break;
+      }
+    }
   }
 }
 
