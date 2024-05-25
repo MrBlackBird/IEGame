@@ -26,7 +26,8 @@ void Player::init_texture() {
     std::cerr << "Error: missing player texture" << std::endl;
   }
 
-  if (!this->ROLLtexture_.loadFromFile("textures/PlayerTexture/_Attack2.png")) {
+  if (!this->ATTACKtexture_.loadFromFile(
+          "textures/PlayerTexture/_Attack2.png")) {
     std::cerr << "Error: missing player texture" << std::endl;
   }
 }
@@ -54,11 +55,11 @@ void Player::init_physics() {
   this->maxGravitationalVelocity_ = 15.f;
 }
 
-void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
+// void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
 
-// void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-//   target.draw(static_cast<const sf::Sprite &>(*this), states);
-// }
+void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+  target.draw(this->sprite_, states);
+}
 
 void Player::move(const float xDir, const float yDir) {
   // acceleration

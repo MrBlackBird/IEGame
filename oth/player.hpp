@@ -2,7 +2,7 @@
 #define PLAYER_HPP
 
 // FIX: add poymorphism
-// #include "gameObject.hpp"
+#include "gameObject.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -12,7 +12,7 @@
 
 enum PLAYER_ANIM_STATES { IDLE = 0, LEFT, RIGHT, JUMP, FALL, ROLL, ATTACK };
 
-class Player {
+class Player : public Object {
 private:
   sf::Sprite sprite_;
   sf::Texture IDLEtexture_;
@@ -66,7 +66,8 @@ public:
   void animations();
   void update_physics();
   void update();
-  void render(sf::RenderTarget &target);
+  virtual void draw(sf::RenderTarget &target,
+                    sf::RenderStates states) const override;
 };
 
 #endif // PLAYER_HPP

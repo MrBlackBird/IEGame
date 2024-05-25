@@ -1,5 +1,7 @@
 #include "game.hpp"
+#include "gameObject.hpp"
 #include <SFML/Window/Keyboard.hpp>
+#include <cstdlib>
 #include <memory>
 
 void Game::init_window() {
@@ -10,11 +12,26 @@ void Game::init_window() {
 
 const sf::RenderWindow &Game::get_window() const { return this->window_; }
 
-void Game::init_player() { this->player_ = std::make_unique<Player>(); }
+void Game::init_player() {
+  this->player_ = std::make_unique<Player>();
+  this->objects_.emplace_back(std::move(player_));
+}
 
-void Game::update_player() { this->player_->update(); }
+void Game::update_player() {
+  for (auto &obj : objects_) {
+    Player *playerTemp = dynamic_cast<Player *>(obj.get());
+    if (playerTemp) {
+      this->player_->update();
+      break;
+    }
+  }
+}
 
-void Game::render_player() { this->player_->render(this->window_); }
+void Game::render_objects() {
+  for (auto &obj : this->objects_) {
+    obj->draw(this->window_, sf::RenderStates::Default);
+  }
+}
 
 void Game::update() {
   // polling window events
@@ -60,7 +77,7 @@ void Game::render() {
   this->window_.clear();
 
   // render stuff
-  this->render_player();
+  this->render_objects();
 
   this->window_.display();
 }
