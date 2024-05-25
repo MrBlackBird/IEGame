@@ -11,7 +11,7 @@ private:
   bool damaging_;
 
 public:
-  Tile(sf::Texture &texture, sf::IntRect textureRect,
+  Tile(sf::Texture *&texture, sf::IntRect textureRect,
        const bool damaging = false);
   virtual ~Tile();
 

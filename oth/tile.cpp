@@ -4,9 +4,9 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-Tile::Tile(sf::Texture &texture, sf::IntRect textureRect, const bool damaging)
+Tile::Tile(sf::Texture *&texture, sf::IntRect textureRect, const bool damaging)
     : damaging_(damaging) {
-  this->sprite_.setTexture(texture);
+  this->sprite_.setTexture(*texture);
   this->sprite_.setTextureRect(textureRect);
 }
 

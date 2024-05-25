@@ -55,11 +55,11 @@ void Player::init_physics() {
   this->maxGravitationalVelocity_ = 15.f;
 }
 
-// void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
+void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
 
-void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-  target.draw(this->sprite_, states);
-}
+// void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+//   target.draw(this->sprite_, states);
+// }
 
 void Player::move(const float xDir, const float yDir) {
   // acceleration

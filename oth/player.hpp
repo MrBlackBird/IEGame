@@ -12,7 +12,7 @@
 
 enum PLAYER_ANIM_STATES { IDLE = 0, LEFT, RIGHT, JUMP, FALL, ROLL, ATTACK };
 
-class Player : public Object {
+class Player {
 private:
   sf::Sprite sprite_;
   sf::Texture IDLEtexture_;
@@ -66,8 +66,9 @@ public:
   void animations();
   void update_physics();
   void update();
-  virtual void draw(sf::RenderTarget &target,
-                    sf::RenderStates states) const override;
+  void render(sf::RenderTarget &target);
+  // virtual void draw(sf::RenderTarget &target,
+  //                   sf::RenderStates states) const override;
 };
 
 #endif // PLAYER_HPP
