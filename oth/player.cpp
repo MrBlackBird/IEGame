@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <iostream>
 
 void Player::init_texture() {
@@ -50,9 +51,9 @@ void Player::init_physics() {
   this->maxVelocity_ = 2.f;
   this->minVelocity_ = 1.f;
   this->acceleration_ = 1.5f;
-  this->drag_ = 0.93f;
-  this->gravity_ = 4.f;
-  this->maxGravitationalVelocity_ = 15.f;
+  this->drag_ = 0.85f;
+  this->gravity_ = 3.f;
+  this->maxGravitationalVelocity_ = 3.f;
 }
 
 void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
@@ -74,16 +75,33 @@ void Player::move(const float xDir, const float yDir) {
 
 void Player::movement() {
   this->animationState_ = IDLE;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-    this->move(-1.f, 0.f);
-    this->animationState_ = LEFT;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+      this->move(-0.5f, 0.f);
+      this->animationState_ = ATTACK;
+    } else {
+      this->move(-1.f, 0.f);
+      this->animationState_ = LEFT;
+    }
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+      this->move(0.5f, 0.f);
+      this->animationState_ = ATTACK;
+    } else {
+      this->move(1.f, 0.f);
+      this->animationState_ = RIGHT;
+    }
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+    this->move(0.f, -1.f);
+    this->animationState_ = JUMP;
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+    this->animationState_ = ATTACK;
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
     this->move(1.f, 0.f);
-    this->animationState_ = RIGHT;
+    this->animationState_ = ROLL;
+    // FIX: make the roll both ways
   }
 }
-
-// FIX: fix the animation frame values to reduce blining
 
 void Player::animations() {
   if (this->animationState_ == IDLE) {
@@ -135,6 +153,32 @@ void Player::animations() {
 
     this->sprite_.setScale(-3.f, 3.f);
     this->sprite_.setOrigin(this->sprite_.getGlobalBounds().width / 3.f, 0.f);
+  } else if (this->animationState_ == JUMP) {
+    this->sprite_.setTexture(JUMPtexture_);
+
+    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.09f) {
+
+      this->currentFrame_.left += 120.f;
+      if (this->currentFrame_.left >= 240.f) {
+        this->currentFrame_.left = 0;
+      }
+
+      this->animationTimer_.restart();
+      this->sprite_.setTextureRect(this->currentFrame_);
+    }
+  } else if (this->animationState_ == ATTACK) {
+    this->sprite_.setTexture(ATTACKtexture_);
+
+    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.09f) {
+
+      this->currentFrame_.left += 120.f;
+      if (this->currentFrame_.left >= 600.f) {
+        this->currentFrame_.left = 0;
+      }
+
+      this->animationTimer_.restart();
+      this->sprite_.setTextureRect(this->currentFrame_);
+    }
   }
 }
 
