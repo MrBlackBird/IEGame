@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <cmath>
 #include <iostream>
 
 void Player::init_texture() {
@@ -40,7 +41,11 @@ void Player::init_sprite() {
   this->sprite_.setScale(4.f, 4.f);
 }
 
-void Player::init_variables() { this->animationState_ = IDLE; }
+void Player::init_variables() {
+  this->animationState_ = IDLE;
+  this->isGrounded_ = true;
+  this->groundLevel_ = 900.f;
+}
 
 void Player::init_animations() {
   this->animationTimer_.restart();
@@ -48,12 +53,17 @@ void Player::init_animations() {
 }
 
 void Player::init_physics() {
-  this->maxVelocity_ = 2.f;
-  this->minVelocity_ = 1.f;
-  this->acceleration_ = 1.5f;
-  this->drag_ = 0.85f;
-  this->gravity_ = 3.f;
-  this->maxGravitationalVelocity_ = 3.f;
+  this->maxVelocity_ = 1000.f;
+  this->minVelocity_ = 10.f;
+  this->acceleration_ = 350.f;
+  this->drag_ = 0.6f;
+  this->gravity_ = 1200.f;
+  this->maxGravitationalVelocity_ = 10000.f;
+}
+
+void Player::init_core() {
+  this->health_ = 1000;
+  this->damage_ = 400;
 }
 
 void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
@@ -62,51 +72,72 @@ void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
 //   target.draw(this->sprite_, states);
 // }
 
-void Player::move(const float xDir, const float yDir) {
+void Player::move(const float xDir, const float yDir, float deltaTime) {
   // acceleration
-  this->velocity_.x += xDir * this->acceleration_;
+  //  this->velocity_.x += xDir * this->acceleration_ * deltaTime;
+  this->sprite_.move(xDir * acceleration_ * deltaTime, 0);
 
   // limit velocity
-  if (std::abs(this->velocity_.x) > this->maxVelocity_) {
-    this->velocity_.x =
-        this->maxVelocity_ * ((this->velocity_.x < 0.f) ? -1.f : 1.f);
-  }
+  //  if (std::abs(this->velocity_.x) > this->maxVelocity_) {
+  //    this->velocity_.x =
+  //        this->maxVelocity_ * ((this->velocity_.x < 0.f) ? -1.f : 1.f);
+  //  }
 }
 
-void Player::movement() {
+// FIX: use bool facingLeft to manage '-' in move functions
+
+void Player::movement(float deltaTime) {
   this->animationState_ = IDLE;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    this->facingLeft_ = true;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-      this->move(-0.5f, 0.f);
+      this->move(-0.5f, 0.f, deltaTime);
       this->animationState_ = ATTACK;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-      this->move(-0.7f, 0.f);
+      this->move(-0.7f, 0.f, deltaTime);
       this->animationState_ = ROLL;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
+               this->isGrounded_) {
+      this->velocity_.y = -800.f;
+      this->isGrounded_ = false;
+      this->animationState_ = JUMP;
     } else {
-      this->move(-1.f, 0.f);
+      this->move(-1.f, 0.f, deltaTime);
       this->animationState_ = LEFT;
     }
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+    this->facingLeft_ = false;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-      this->move(0.5f, 0.f);
+      this->move(0.5f, 0.f, deltaTime);
       this->animationState_ = ATTACK;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-      this->move(0.7f, 0.f);
+      this->move(0.7f, 0.f, deltaTime);
       this->animationState_ = ROLL;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
+               this->isGrounded_) {
+      this->velocity_.y = -800.f;
+      this->isGrounded_ = false;
+      this->animationState_ = JUMP;
     } else {
-      this->move(1.f, 0.f);
+      this->move(1.f, 0.f, deltaTime);
       this->animationState_ = RIGHT;
     }
 
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-    this->move(0.f, -1.f);
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
+             this->isGrounded_) {
+    this->velocity_.y = -800.f;
+    this->isGrounded_ = false;
     this->animationState_ = JUMP;
 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
     this->animationState_ = ATTACK;
 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-    this->move(0.7f, 0.f);
+    if (facingLeft_) {
+      this->move(-1.f, 0.f, deltaTime);
+    } else {
+      this->move(1.f, 0.f, deltaTime);
+    }
     this->animationState_ = ROLL;
   }
 }
@@ -165,7 +196,7 @@ void Player::animations() {
   } else if (this->animationState_ == JUMP) {
     this->sprite_.setTexture(JUMPtexture_);
 
-    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.09f) {
+    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.3f) {
 
       this->currentFrame_.left += 120.f;
       if (this->currentFrame_.left >= 240.f) {
@@ -204,26 +235,40 @@ void Player::animations() {
   }
 }
 
-void Player::update_physics() {
+void Player::update_physics(float deltaTime) {
   // gravity
-  this->velocity_.y += 1.f * this->gravity_;
-  if (std::abs(this->velocity_.x) > this->maxGravitationalVelocity_) {
-    this->velocity_.y =
-        this->maxVelocity_ * ((this->velocity_.y < 0.f) ? -1.f : 1.f);
+  this->velocity_.y += this->gravity_ * deltaTime;
+
+  // limit gravity
+  if (std::abs(this->velocity_.y) > this->maxGravitationalVelocity_) {
+    this->velocity_.y = this->maxGravitationalVelocity_ *
+                        ((this->velocity_.y < 0.f) ? -1.f : 1.f);
   }
 
   // deceleration
-  this->velocity_ *= this->drag_;
+  //  this->velocity_ *= (float)pow(this->drag_, deltaTime);
+  //
+  //  // limit deceleration
+  //  if (std::abs(this->velocity_.x) + 10 < this->minVelocity_) {
+  //    this->velocity_.x = 0.f;
+  //  }
+  //  if (std::abs(this->velocity_.y) < this->minVelocity_) {
+  //    this->velocity_.y = 0.f;
+  //  }
 
-  // limit deceleration
-  if (std::abs(this->velocity_.x) < this->minVelocity_) {
-    this->velocity_.x = 0.f;
-  }
-  if (std::abs(this->velocity_.y) < this->minVelocity_) {
+  this->sprite_.move(this->velocity_ * deltaTime);
+
+  // check if player is on the ground (for jumping)
+  if (this->sprite_.getPosition().y + this->sprite_.getGlobalBounds().height >=
+      this->groundLevel_) {
     this->velocity_.y = 0.f;
+    this->isGrounded_ = true;
+    this->sprite_.setPosition(this->sprite_.getPosition().x,
+                              this->groundLevel_ -
+                                  this->sprite_.getGlobalBounds().height);
+  } else {
+    this->isGrounded_ = false;
   }
-
-  this->sprite_.move(this->velocity_);
 }
 
 const bool Player::get_animation_switch() {
@@ -255,10 +300,10 @@ void Player::set_position(const float xCord, const float yCord) {
 
 void Player::reset_velocity_y() { this->velocity_.y = 0.f; }
 
-void Player::update() {
-  this->movement();
+void Player::update(float deltaTime) {
+  this->movement(deltaTime);
   this->animations();
-  this->update_physics();
+  this->update_physics(deltaTime);
 }
 
 Player::Player() {
@@ -267,6 +312,7 @@ Player::Player() {
   this->init_sprite();
   this->init_animations();
   this->init_physics();
+  this->init_core();
 }
 
 Player::~Player() {}

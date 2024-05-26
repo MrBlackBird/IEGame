@@ -6,6 +6,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/Window.hpp>
 #include <memory>
 
@@ -16,6 +17,8 @@ private:
   std::unique_ptr<Player> player_;
   // std::unique_ptr<BackGround> backGround_;
   // std::vector<std::unique_ptr<Object>> objects_;
+  sf::Clock clock_;
+  float deltaTime_;
 
   void init_window();
   void init_player();
@@ -30,7 +33,7 @@ public:
   const sf::RenderWindow &get_window() const;
   void update();
   void render();
-  void update_player();
+  void update_player(float deltaTime_);
   void render_objects();
   void updateCollision();
 };

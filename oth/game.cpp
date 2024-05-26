@@ -21,11 +21,11 @@ void Game::init_player() {
 //   this->backGround_ = std::make_unique<BackGround>();
 // }
 
-void Game::update_player() {
+void Game::update_player(float deltaTime) {
   // for (auto &obj : objects_) {
   //  Player *playerTemp = dynamic_cast<Player *>(obj.get());
   // if (playerTemp) {
-  this->player_->update();
+  this->player_->update(deltaTime);
   // break;
   //}
   //}
@@ -60,8 +60,11 @@ void Game::update() {
     }
   }
 
+  // calculate delta time
+  this->deltaTime_ = this->clock_.restart().asSeconds();
+
   // update player in-game
-  this->update_player();
+  this->update_player(deltaTime_);
 
   // update collisions
   this->updateCollision();

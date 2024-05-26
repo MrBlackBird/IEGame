@@ -27,6 +27,9 @@ private:
   sf::Clock animationTimer_;
   short animationState_;
   bool animationSwitch_;
+  bool facingLeft_;
+  bool isGrounded_;
+  float groundLevel_;
 
   // FIX: physics
   sf::Vector2f velocity_;
@@ -46,6 +49,7 @@ private:
   void init_sprite();
   void init_animations();
   void init_physics();
+  void init_core();
 
 public:
   // constructor and destructor
@@ -63,11 +67,11 @@ public:
 
   // functions
   void reset_animation_timer();
-  void move(const float xDir, const float yDir);
-  void movement();
+  void move(const float xDir, const float yDir, float deltaTime);
+  void movement(float deltaTime);
   void animations();
-  void update_physics();
-  void update();
+  void update_physics(float deltaTime);
+  void update(float deltaTime);
   void render(sf::RenderTarget &target);
   // virtual void draw(sf::RenderTarget &target,
   //                   sf::RenderStates states) const override;
