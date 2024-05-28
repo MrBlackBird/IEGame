@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# The rest
+*
+!*.cpp
+!*.h
+!*.txt
