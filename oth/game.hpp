@@ -1,7 +1,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-// #include "backgr.hpp"
+#include "backgr.hpp"
+#include "healthBar.hpp"
 #include "player.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -15,14 +16,16 @@ private:
   sf::RenderWindow window_;
   sf::Event event_;
   Player *player_;
-  // std::unique_ptr<BackGround> backGround_;
+  BackGround *backGround_;
+  HealthBar *healthBar_;
   std::vector<std::unique_ptr<Object>> objects_;
   sf::Clock clock_;
   float deltaTime_;
 
   void init_window();
   void init_player();
-  // void init_background();
+  void init_background();
+  void init_health_bar();
 
 public:
   // constructor & destructor

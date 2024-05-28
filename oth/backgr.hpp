@@ -1,12 +1,16 @@
+#include "gameObject.hpp"
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
 
-class BackGround {
+class BackGround : public Object {
 private:
-  sf::Texture texture_;
-  sf::Sprite sprite_;
+  sf::Texture NIGHTtexture_;
+  //  sf::Texture CITYtexture_;
+  //  sf::Texture GLOWtexture_;
+  //  sf::Texture FORESTtexture_;
+  sf::Sprite NIGHTsprite_;
+  //  sf::Sprite CITYsprite_;
+  //  sf::Sprite GLOWsprite_;
+  //  sf::Sprite FORESTsprite_;
 
   void init_texture();
   void init_sprite();
@@ -17,5 +21,5 @@ public:
 
   // functions
   void update();
-  void render(sf::RenderTarget &target);
+  void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };

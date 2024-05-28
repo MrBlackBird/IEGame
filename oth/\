@@ -5,17 +5,13 @@
 #include <memory>
 
 void Game::init_window() {
-  // create window
   this->window_.create(sf::VideoMode(1300, 900), "Dark Ages",
                        sf::Style::Close | sf::Style::Titlebar);
-  // set frame rate limit
   this->window_.setFramerateLimit(240);
 }
 
-// getter for the window
 const sf::RenderWindow &Game::get_window() const { return this->window_; }
 
-// create player object and pointers
 void Game::init_player() {
   // create player as unique ptr for polymorphic drawing
   auto player = std::make_unique<Player>();
@@ -25,41 +21,26 @@ void Game::init_player() {
   this->objects_.emplace_back(std::move(player));
 }
 
-// create background object and pointers
 void Game::init_background() {
-  // same principal as in init_player()
-  auto backGround1 = std::make_unique<BackGround>();
-  this->backGround_ = backGround1.get();
-  this->objects_.emplace_back(std::move(backGround1));
+  this->backGround_ = std::make_unique<BackGround>();
 }
 
-void Game::init_health_bar() {
-  auto healthBar = std::make_unique<HealthBar>();
-  this->healthBar_ = healthBar.get();
-  this->objects_.emplace_back(std::move(healthBar_));
-}
-
-//  update player parameteres
 void Game::update_player(float deltaTime) {
-  // added 'if' for checking for nullptr
   if (this->player_) {
     this->player_->update(deltaTime);
   }
 }
 
-// draws all game objects from the objects_ vector of unique_ptr's
 void Game::render_objects() {
   for (auto &obj : this->objects_) {
     obj->draw(this->window_, sf::RenderStates::Default);
   }
 }
 
-// update the state of the game while running
 void Game::update() {
   // polling window events
   while (this->window_.pollEvent(this->event_)) {
 
-    // closing
     if (this->event_.type == sf::Event::Closed) {
       this->window_.close();
     } else if (this->event_.type == sf::Event::KeyPressed &&
@@ -67,7 +48,6 @@ void Game::update() {
       this->window_.close();
     }
 
-    // inputs for animation delay cancelling
     if (this->event_.type == sf::Event::KeyReleased &&
         (this->event_.key.code == sf::Keyboard::A ||
          this->event_.key.code == sf::Keyboard::W ||
@@ -84,11 +64,10 @@ void Game::update() {
   // update player in-game
   this->update_player(deltaTime_);
 
-  // update collisions in-game
+  // update collisions
   this->updateCollision();
 }
 
-// checking player for collsions
 void Game::updateCollision() {
   if (this->player_) {
     if (this->player_->get_position().y +
@@ -104,7 +83,6 @@ void Game::updateCollision() {
   }
 }
 
-// redner objects on the screen
 void Game::render() {
   this->window_.clear();
 
@@ -116,7 +94,6 @@ void Game::render() {
 
 Game::Game() {
   this->init_window();
-  this->init_background();
   this->init_player();
 }
 

@@ -140,6 +140,9 @@ void Player::movement(float deltaTime) {
   }
 }
 
+// FIX: fix the bug which allows for rolling right while moving left when
+// pressing A and D at the same time
+
 void Player::animations() {
   if (this->animationState_ == IDLE) {
     this->sprite_.setTexture(IDLEtexture_);
