@@ -1,8 +1,6 @@
 #include "player.hpp"
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <iostream>
 
@@ -38,7 +36,7 @@ void Player::init_sprite() {
   this->sprite_.setTexture(IDLEtexture_);
   this->currentFrame_ = sf::IntRect(0, 0, 120, 80);
   this->sprite_.setTextureRect(currentFrame_);
-  this->sprite_.setScale(4.f, 4.f);
+  this->sprite_.setScale(3.f, 3.f);
 }
 
 void Player::init_variables() {
@@ -66,11 +64,11 @@ void Player::init_core() {
   this->damage_ = 400;
 }
 
-void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
+// void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
 
-// void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-//   target.draw(this->sprite_, states);
-// }
+void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+  target.draw(this->sprite_, states);
+}
 
 void Player::move(const float xDir, const float yDir, float deltaTime) {
   // acceleration
@@ -173,7 +171,7 @@ void Player::animations() {
     }
 
     // set scale for correct sprite orientation | adjust orgin position
-    this->sprite_.setScale(4.f, 4.f);
+    this->sprite_.setScale(3.f, 3.f);
     this->sprite_.setOrigin(0.f, 0.f);
 
   } else if (this->animationState_ == LEFT) {
@@ -190,8 +188,8 @@ void Player::animations() {
       this->sprite_.setTextureRect(this->currentFrame_);
     }
 
-    this->sprite_.setScale(-4.f, 4.f);
-    this->sprite_.setOrigin(this->sprite_.getGlobalBounds().width / 4.f, 0.f);
+    this->sprite_.setScale(-3.f, 3.f);
+    this->sprite_.setOrigin(this->sprite_.getGlobalBounds().width / 3.f, 0.f);
 
   } else if (this->animationState_ == JUMP) {
     this->sprite_.setTexture(JUMPtexture_);

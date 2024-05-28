@@ -14,9 +14,9 @@ class Game {
 private:
   sf::RenderWindow window_;
   sf::Event event_;
-  std::unique_ptr<Player> player_;
+  Player *player_;
   // std::unique_ptr<BackGround> backGround_;
-  // std::vector<std::unique_ptr<Object>> objects_;
+  std::vector<std::unique_ptr<Object>> objects_;
   sf::Clock clock_;
   float deltaTime_;
 

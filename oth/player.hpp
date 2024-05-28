@@ -4,15 +4,11 @@
 // FIX: add poymorphism
 #include "gameObject.hpp"
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/System/Clock.hpp>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/System.hpp>
 
 enum PLAYER_ANIM_STATES { IDLE = 0, LEFT, RIGHT, JUMP, FALL, ROLL, ATTACK };
 
-class Player {
+class Player : public Object {
 private:
   sf::Sprite sprite_;
   sf::Texture IDLEtexture_;
@@ -72,9 +68,9 @@ public:
   void animations();
   void update_physics(float deltaTime);
   void update(float deltaTime);
-  void render(sf::RenderTarget &target);
-  // virtual void draw(sf::RenderTarget &target,
-  //                   sf::RenderStates states) const override;
+  // void render(sf::RenderTarget &target);
+  virtual void draw(sf::RenderTarget &target,
+                    sf::RenderStates states) const override;
 };
 
 #endif // PLAYER_HPP
