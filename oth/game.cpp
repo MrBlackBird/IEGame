@@ -36,7 +36,13 @@ void Game::init_background() {
 void Game::init_health_bar() {
   auto healthBar = std::make_unique<HealthBar>();
   this->healthBar_ = healthBar.get();
-  this->objects_.emplace_back(std::move(healthBar_));
+  this->objects_.emplace_back(std::move(healthBar));
+}
+
+void Game::init_enemy() {
+  auto enemy = std::make_unique<Enemy>();
+  this->enemy_ = enemy.get();
+  this->objects_.emplace_back(std::move(enemy));
 }
 
 //  update player parameteres
@@ -117,6 +123,7 @@ void Game::render() {
 Game::Game() {
   this->init_window();
   this->init_background();
+  this->init_enemy();
   this->init_player();
 }
 
