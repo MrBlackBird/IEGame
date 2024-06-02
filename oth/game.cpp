@@ -51,6 +51,16 @@ void Game::update_player(float deltaTime) {
   if (this->player_) {
     this->player_->update(deltaTime);
   }
+  // update global player position
+  this->playerXPosition_ = this->player_->get_position().x;
+}
+
+//  update enemy parameteres
+void Game::update_enemy(float deltaTime) {
+  // added 'if' for checking for nullptr
+  if (this->enemy_) {
+    this->enemy_->update(this->playerXPosition_, deltaTime);
+  }
 }
 
 // draws all game objects from the objects_ vector of unique_ptr's
@@ -90,12 +100,16 @@ void Game::update() {
   // update player in-game
   this->update_player(deltaTime_);
 
+  // update enemy in-game
+  this->update_enemy(deltaTime_);
+
   // update collisions in-game
   this->updateCollision();
 }
 
 // checking player for collsions
 void Game::updateCollision() {
+  // for player
   if (this->player_) {
     if (this->player_->get_position().y +
             this->player_->get_global_bounds().height >
@@ -106,6 +120,19 @@ void Game::updateCollision() {
           this->player_->get_position().x,
           this->window_.getSize().y -
               this->player_->get_global_bounds().height);
+    }
+  }
+
+  // for enemie
+  if (this->enemy_) {
+    if (this->enemy_->get_position().y +
+            this->enemy_->get_global_bounds().height >
+        this->window_.getSize().y) {
+
+      this->enemy_->reset_velocity_y();
+      this->enemy_->set_position(this->enemy_->get_position().x,
+                                 this->window_.getSize().y -
+                                     this->enemy_->get_global_bounds().height);
     }
   }
 }

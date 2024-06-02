@@ -23,6 +23,8 @@ private:
   std::vector<std::unique_ptr<Object>> objects_;
   sf::Clock clock_;
   float deltaTime_;
+  // for easy enemie movement
+  float playerXPosition_;
 
   void init_window();
   void init_player();
@@ -40,6 +42,7 @@ public:
   void update();
   void render();
   void update_player(float deltaTime_);
+  void update_enemy(float deltaTime_);
   void render_objects();
   void updateCollision();
 };
