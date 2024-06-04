@@ -7,7 +7,7 @@ class Platform : public Object {
 private:
   sf::Texture texture_;
   sf::Sprite sprite_;
-  std::vector<std::pair<float, float>> positions_;
+  std::vector<sf::Vector2f> positions_;
   std::vector<sf::Drawable> platforms_;
 
   void init_texture();
