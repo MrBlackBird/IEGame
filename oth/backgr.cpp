@@ -24,17 +24,17 @@ void BackGround::init_texture() {
 void BackGround::init_sprite() {
   this->NIGHTsprite_.setTexture(this->NIGHTtexture_);
   this->NIGHTsprite_.setScale(sf::Vector2f(4.5f, 5.f));
-  //  this->CITYsprite_.setTexture(this->NIGHTtexture_);
-  //  this->CITYsprite_.setScale(sf::Vector2f(4.1f, 4.5f));
-  //  this->GLOWsprite_.setTexture(this->NIGHTtexture_);
-  //  this->GLOWsprite_.setScale(sf::Vector2f(4.1f, 4.5f));
+  // this->CITYsprite_.setTexture(this->NIGHTtexture_);
+  // this->CITYsprite_.setScale(sf::Vector2f(4.5f, 5.f));
+  // this->GLOWsprite_.setTexture(this->NIGHTtexture_);
+  // this->GLOWsprite_.setScale(sf::Vector2f(4.1f, 4.5f));
 }
 
 void BackGround::update() {}
 
 void BackGround::draw(sf::RenderTarget &target, sf::RenderStates states) const {
   target.draw(this->NIGHTsprite_, states);
-  //  target.draw(this->CITYsprite_, states);
+  // target.draw(this->CITYsprite_, states);
   //  target.draw(this->GLOWsprite_, states);
 }
 

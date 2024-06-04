@@ -1,10 +1,15 @@
 #include "gameObject.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 class HealthBar : public Object {
 private:
-  sf::Texture texture_;
-  sf::Sprite sprite_;
+  sf::Texture BASEtexture_;
+  sf::Texture BORDERtexture_;
+  sf::Texture DAMAGEtexture_;
+  sf::Sprite BASEsprite_;
+  sf::Sprite BORDERsprite_;
+  sf::Sprite DAMAGEsprite_;
 
   void init_texture();
   void init_sprite();

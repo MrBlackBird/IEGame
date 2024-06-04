@@ -66,7 +66,7 @@ void Enemy::move(const float xDir, const float yDir, float deltaTime) {
   this->sprite_.move(xDir * acceleration_ * deltaTime, 0);
 }
 
-void Enemy::chase_player(Player &player, float deltaTime) {
+void Enemy::chase_player(float deltaTime) {
   if (this->distanceToPlayer_ > 0 && this->distanceToPlayer_ < 200.f) {
     this->facingLeft_ = true;
     this->animationState_ = LEFT_E;

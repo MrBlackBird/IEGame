@@ -55,7 +55,7 @@ void Player::init_physics() {
   this->minVelocity_ = 10.f;
   this->acceleration_ = 350.f;
   this->drag_ = 0.6f;
-  this->gravity_ = 1200.f;
+  this->gravity_ = 2000.f;
   this->maxGravitationalVelocity_ = 10000.f;
 }
 

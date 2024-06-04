@@ -59,7 +59,7 @@ public:
 
   // functions
   void move(const float xDir, const float yDir, float deltaTime);
-  void chase_player(Player &player, float deltaTime);
+  void chase_player(float deltaTime);
   void movement(Player &player, float deltaTime);
   void animations();
   void reset_velocity_y();

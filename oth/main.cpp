@@ -1,7 +1,9 @@
+// g++ main.cpp game.cpp player.cpp enemy.cpp healthBar.cpp backgr.cpp -o
+// gametest -lsfml-graphics -lsfml-window -lsfml-system
+
 #include "game.hpp"
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 #include <time.h>
 
 int main() {
