@@ -4,6 +4,7 @@
 #include "backgr.hpp"
 #include "enemy.hpp"
 #include "healthBar.hpp"
+#include "platforms.hpp"
 #include "player.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -20,6 +21,7 @@ private:
   BackGround *backGround_;
   HealthBar *healthBar_;
   Enemy *enemy_;
+  Platform *platforms_;
   std::vector<std::unique_ptr<Object>> objects_;
   sf::Clock clock_;
   float deltaTime_;
@@ -31,6 +33,7 @@ private:
   void init_background();
   void init_health_bar();
   void init_enemy();
+  void init_platforms();
 
 public:
   // constructor & destructor
@@ -43,6 +46,7 @@ public:
   void render();
   void update_player(float deltaTime_);
   void update_enemy(float deltaTime_);
+  void update_platforms();
   void render_objects();
   void updateCollision();
 };

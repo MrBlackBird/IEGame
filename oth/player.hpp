@@ -4,7 +4,9 @@
 // FIX: add poymorphism
 #include "gameObject.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/System.hpp>
+#include <SFML/System/Vector2.hpp>
 
 enum PLAYER_ANIM_STATES { IDLE = 0, LEFT, RIGHT, JUMP, FALL, ROLL, ATTACK };
 
@@ -39,6 +41,7 @@ private:
   // FIX: core
   int damage_;
   int health_;
+  sf::Vector2f currentPosition_;
 
   void init_variables();
   void init_texture();
@@ -56,10 +59,12 @@ public:
   const bool get_animation_switch();
   const sf::Vector2f get_position() const;
   const sf::FloatRect get_global_bounds() const;
+  const sf::Vector2f get_velocity() const;
 
   // modifiers
   void set_position(const float xCord, const float yCord);
   void reset_velocity_y();
+  void set_is_grounded(bool grounded);
 
   // functions
   void reset_animation_timer();

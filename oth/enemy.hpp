@@ -4,6 +4,7 @@
 #include "gameObject.hpp"
 #include "player.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 
 enum ENEMY_ANIM_STATES { IDLE_E = 0, LEFT_E, RIGHT_E, ATTACK_E, DEATH_E };
 
@@ -36,6 +37,7 @@ private:
   // FIX: core
   int damage_;
   int health_;
+  sf::Vector2f currentPosition_;
   float distanceToPlayer_;
 
   void init_variables();

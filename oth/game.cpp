@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "gameObject.hpp"
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cstdlib>
 #include <memory>
@@ -45,6 +46,12 @@ void Game::init_enemy() {
   this->objects_.emplace_back(std::move(enemy));
 }
 
+void Game::init_platforms() {
+  auto platforms = std::make_unique<Platform>();
+  this->platforms_ = platforms.get();
+  this->objects_.emplace_back(std::move(platforms));
+}
+
 //  update player parameteres
 void Game::update_player(float deltaTime) {
   // added 'if' for checking for nullptr
@@ -62,6 +69,8 @@ void Game::update_enemy(float deltaTime) {
     this->enemy_->update(this->playerXPosition_, deltaTime);
   }
 }
+
+void Game::update_platforms() {}
 
 // draws all game objects from the objects_ vector of unique_ptr's
 void Game::render_objects() {
@@ -103,6 +112,9 @@ void Game::update() {
   // update enemy in-game
   this->update_enemy(deltaTime_);
 
+  // update platforms
+  this->update_platforms();
+
   // update collisions in-game
   this->updateCollision();
 }
@@ -111,6 +123,7 @@ void Game::update() {
 void Game::updateCollision() {
   // for player
   if (this->player_) {
+    // for window bounds
     if (this->player_->get_position().y +
             this->player_->get_global_bounds().height >
         this->window_.getSize().y) {
@@ -120,6 +133,28 @@ void Game::updateCollision() {
           this->player_->get_position().x,
           this->window_.getSize().y -
               this->player_->get_global_bounds().height);
+    }
+
+    // for platforms
+    for (auto &plfrBounds : this->platforms_->get_platform_bounds()) {
+      if (this->player_->get_global_bounds().intersects(plfrBounds)) {
+        // Check if the player is falling down onto the platform
+        if (this->player_->get_velocity().y > 0.f) { // Falling down
+          // Place the player on top of the platform
+          this->player_->set_position(
+              this->player_->get_position().x,
+              plfrBounds.top - this->player_->get_global_bounds().height);
+          this->player_->reset_velocity_y();
+          this->player_->set_is_grounded(true);
+        }
+        // Check if the player is moving up into the platform
+        else if (this->player_->get_velocity().y < 0.f) { // Moving up
+          // Place the player below the platform
+          this->player_->set_position(this->player_->get_position().x,
+                                      plfrBounds.top + plfrBounds.height);
+          this->player_->reset_velocity_y();
+        }
+      }
     }
   }
 
@@ -152,6 +187,7 @@ Game::Game() {
   this->init_background();
   this->init_enemy();
   this->init_player();
+  this->init_platforms();
 }
 
 Game::~Game() {}

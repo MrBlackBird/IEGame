@@ -8,26 +8,37 @@ void Platform::init_texture() {}
 
 void Platform::init_sprite() {}
 
-void Platform::init_positions() {
-  for (int i = 0; i < 3; i++) {
-    sf::Vector2f pos(0.f + (200 * i), 300.f);
-    this->positions_.emplace_back(pos);
-  }
-}
+void Platform::init_positions() {}
 
 // create a plaftorm for each position pair
 //
-// FIX: finish making platforms
+// FIX: testing making platforms
 void Platform::init_platforms() {
-  for (auto &position : this->positions_) {
-    sf::RectangleShape plfrm(sf::Vector2f(100, 40));
-    plfrm.setPosition(position);
-  }
+  sf::RectangleShape *plfrm1 =
+      new sf::RectangleShape(sf::Vector2f(100.f, 40.f));
+  plfrm1->setPosition(sf::Vector2f(450.f, 700.f));
+  plfrm1->setFillColor(sf::Color::Black);
+  this->platformsBounds_.emplace_back(plfrm1->getGlobalBounds());
+  this->platforms_.emplace_back(plfrm1);
+
+  sf::RectangleShape *plfrm2 =
+      new sf::RectangleShape(sf::Vector2f(100.f, 40.f));
+  plfrm2->setPosition(sf::Vector2f(150.f, 700.f));
+  plfrm2->setFillColor(sf::Color::Black);
+  this->platformsBounds_.emplace_back(plfrm2->getGlobalBounds());
+  this->platforms_.emplace_back(plfrm2);
+
+  sf::RectangleShape *plfrm3 =
+      new sf::RectangleShape(sf::Vector2f(100.f, 40.f));
+  plfrm3->setPosition(sf::Vector2f(1000.f, 700.f));
+  plfrm3->setFillColor(sf::Color::Black);
+  this->platformsBounds_.emplace_back(plfrm3->getGlobalBounds());
+  this->platforms_.emplace_back(plfrm3);
 }
 
 void Platform::draw(sf::RenderTarget &target, sf::RenderStates states) const {
   for (auto &platform : this->platforms_) {
-    target.draw(platform);
+    target.draw(*platform);
   }
 }
 
@@ -36,7 +47,7 @@ void Platform::update() {}
 Platform::Platform() {
   this->init_texture();
   this->init_sprite();
-  this->init_positions();
+  this->init_platforms();
 }
 
 Platform::~Platform() {}

@@ -1,5 +1,7 @@
 #include "player.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window.hpp>
 #include <cmath>
 #include <iostream>
@@ -96,7 +98,7 @@ void Player::movement(float deltaTime) {
       this->animationState_ = ROLL;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
                this->isGrounded_) {
-      this->velocity_.y = -800.f;
+      this->velocity_.y = -1000.f;
       this->isGrounded_ = false;
       this->animationState_ = JUMP;
     } else {
@@ -113,7 +115,7 @@ void Player::movement(float deltaTime) {
       this->animationState_ = ROLL;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
                this->isGrounded_) {
-      this->velocity_.y = -800.f;
+      this->velocity_.y = -1000.f;
       this->isGrounded_ = false;
       this->animationState_ = JUMP;
     } else {
@@ -123,7 +125,7 @@ void Player::movement(float deltaTime) {
 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
              this->isGrounded_) {
-    this->velocity_.y = -800.f;
+    this->velocity_.y = -1000.f;
     this->isGrounded_ = false;
     this->animationState_ = JUMP;
 
@@ -246,17 +248,6 @@ void Player::update_physics(float deltaTime) {
                         ((this->velocity_.y < 0.f) ? -1.f : 1.f);
   }
 
-  // deceleration
-  //  this->velocity_ *= (float)pow(this->drag_, deltaTime);
-  //
-  //  // limit deceleration
-  //  if (std::abs(this->velocity_.x) + 10 < this->minVelocity_) {
-  //    this->velocity_.x = 0.f;
-  //  }
-  //  if (std::abs(this->velocity_.y) < this->minVelocity_) {
-  //    this->velocity_.y = 0.f;
-  //  }
-
   this->sprite_.move(this->velocity_ * deltaTime);
 
   // check if player is on the ground (for jumping)
@@ -291,8 +282,18 @@ const sf::Vector2f Player::get_position() const {
   return this->sprite_.getPosition();
 }
 
+// FIX: fix sprite colisions
+
 const sf::FloatRect Player::get_global_bounds() const {
-  return this->sprite_.getGlobalBounds();
+  sf::FloatRect actualGlobalBounds = this->sprite_.getGlobalBounds();
+  sf::FloatRect practicalGlobalBounds = actualGlobalBounds;
+
+  practicalGlobalBounds.left -= 100.f;
+  practicalGlobalBounds.top += 0.f;
+  practicalGlobalBounds.width -= 100.f;
+  practicalGlobalBounds.height += 0.f;
+
+  return practicalGlobalBounds;
 }
 
 void Player::set_position(const float xCord, const float yCord) {
@@ -300,6 +301,10 @@ void Player::set_position(const float xCord, const float yCord) {
 }
 
 void Player::reset_velocity_y() { this->velocity_.y = 0.f; }
+
+const sf::Vector2f Player::get_velocity() const { return this->velocity_; }
+
+void Player::set_is_grounded(bool grounded) { this->isGrounded_ = grounded; }
 
 void Player::update(float deltaTime) {
   this->movement(deltaTime);
