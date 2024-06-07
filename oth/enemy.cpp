@@ -37,6 +37,9 @@ void Enemy::init_variables() {
   this->isGrounded_ = true;
   this->groundLevel_ = 900.f;
   this->distanceToPlayer_ = 0;
+  this->health_ = 100;
+  this->damage_ = 200;
+  this->isAlive_ = true;
 }
 
 void Enemy::init_animations() {
@@ -185,6 +188,21 @@ const sf::FloatRect Enemy::get_global_bounds() const {
   return this->sprite_.getGlobalBounds();
 }
 
+const sf::FloatRect Enemy::get_global_bounds_for_platforms() const {
+  sf::FloatRect actualGlobalBounds = this->sprite_.getGlobalBounds();
+  sf::FloatRect practicalGlobalBounds = actualGlobalBounds;
+
+  // FIX: adjust for enemie - not done yet
+  practicalGlobalBounds.left += 0.f;
+  practicalGlobalBounds.top += 0.f;
+  practicalGlobalBounds.width -= 0.f;
+  practicalGlobalBounds.height += 0.f;
+
+  return practicalGlobalBounds;
+}
+
+const sf::Vector2f Enemy::get_velocity() const { return this->velocity_; }
+
 void Enemy::set_position(const float xCord, const float yCord) {
   this->sprite_.setPosition(xCord, yCord);
 }
@@ -195,10 +213,30 @@ void Enemy::update_distance_to_player(float playerXPosition) {
   this->distanceToPlayer_ = this->get_position().x - playerXPosition;
 }
 
+// FIX: testing taking damage
+void Enemy::take_damage() {
+  this->health_ -= 100;
+  std::cout << "took damage" << " " << this->health_ << std::endl;
+}
+
+void Enemy::check_death() {
+  if (this->health_ <= 0) {
+    this->isAlive_ = false;
+    this->animationState_ = DEATH_E;
+  } else {
+    this->isAlive_ = true;
+  }
+}
+
 void Enemy::update(float playerXPosition, float deltaTime) {
-  this->animations();
-  this->update_physics(deltaTime);
-  this->update_distance_to_player(playerXPosition);
+  if (isAlive_) {
+    this->animations();
+    this->update_physics(deltaTime);
+    this->update_distance_to_player(playerXPosition);
+    this->check_death();
+  } else {
+    this->animations();
+  }
 }
 
 Enemy::Enemy() {

@@ -1,12 +1,12 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-// FIX: add poymorphism
 #include "gameObject.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <memory>
 
 enum PLAYER_ANIM_STATES { IDLE = 0, LEFT, RIGHT, JUMP, FALL, ROLL, ATTACK };
 
@@ -59,7 +59,9 @@ public:
   const bool get_animation_switch();
   const sf::Vector2f get_position() const;
   const sf::FloatRect get_global_bounds() const;
+  const sf::FloatRect get_global_bounds_for_platforms() const;
   const sf::Vector2f get_velocity() const;
+  const bool get_is_facing_left() const;
 
   // modifiers
   void set_position(const float xCord, const float yCord);
@@ -72,6 +74,7 @@ public:
   void movement(float deltaTime);
   void animations();
   void update_physics(float deltaTime);
+  bool get_if_attack_state();
   void update(float deltaTime);
   // void render(sf::RenderTarget &target);
   virtual void draw(sf::RenderTarget &target,

@@ -4,6 +4,7 @@
 #include "gameObject.hpp"
 #include "player.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 
 enum ENEMY_ANIM_STATES { IDLE_E = 0, LEFT_E, RIGHT_E, ATTACK_E, DEATH_E };
@@ -37,6 +38,7 @@ private:
   // FIX: core
   int damage_;
   int health_;
+  bool isAlive_;
   sf::Vector2f currentPosition_;
   float distanceToPlayer_;
 
@@ -55,6 +57,8 @@ public:
   // getters
   const sf::Vector2f get_position() const;
   const sf::FloatRect get_global_bounds() const;
+  const sf::FloatRect get_global_bounds_for_platforms() const;
+  const sf::Vector2f get_velocity() const;
 
   // modifiers
   void set_position(const float xCord, const float yCord);
@@ -67,6 +71,8 @@ public:
   void reset_velocity_y();
   void update_distance_to_player(float playerXPosition);
   void update_physics(float deltaTime);
+  void take_damage();
+  void check_death();
   void update(float playerXPosition, float deltaTime);
   virtual void draw(sf::RenderTarget &target,
                     sf::RenderStates states) const override;

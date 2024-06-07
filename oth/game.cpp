@@ -57,9 +57,29 @@ void Game::update_player(float deltaTime) {
   // added 'if' for checking for nullptr
   if (this->player_) {
     this->player_->update(deltaTime);
+
+    // update global player position
+    this->playerXPosition_ = this->player_->get_position().x;
+    this->playerXenemyDistance_ =
+        this->player_->get_position().x - this->enemy_->get_position().x;
+
+    // attacking
+    if (this->player_->get_if_attack_state() == true) {
+      // check for enemy in range
+      if (this->playerXenemyDistance_ < 0 &&
+          this->player_->get_is_facing_left() == false) {
+        if (playerXenemyDistance_ > -100.f) {
+          // count attack
+          this->enemy_->take_damage();
+        }
+      } else if (this->playerXenemyDistance_ > 0 &&
+                 this->player_->get_is_facing_left() == true) {
+        if (playerXenemyDistance_ < 100.f) {
+          this->enemy_->take_damage();
+        }
+      }
+    }
   }
-  // update global player position
-  this->playerXPosition_ = this->player_->get_position().x;
 }
 
 //  update enemy parameteres
@@ -137,7 +157,8 @@ void Game::updateCollision() {
 
     // for platforms
     for (auto &plfrBounds : this->platforms_->get_platform_bounds()) {
-      if (this->player_->get_global_bounds().intersects(plfrBounds)) {
+      if (this->player_->get_global_bounds_for_platforms().intersects(
+              plfrBounds)) {
         // Check if the player is falling down onto the platform
         if (this->player_->get_velocity().y > 0.f) { // Falling down
           // Place the player on top of the platform
@@ -168,6 +189,27 @@ void Game::updateCollision() {
       this->enemy_->set_position(this->enemy_->get_position().x,
                                  this->window_.getSize().y -
                                      this->enemy_->get_global_bounds().height);
+    }
+  }
+  // for platforms
+  for (auto &plfrBounds : this->platforms_->get_platform_bounds()) {
+    if (this->enemy_->get_global_bounds_for_platforms().intersects(
+            plfrBounds)) {
+      // Check if the player is falling down onto the platform
+      if (this->enemy_->get_velocity().y > 0.f) { // Falling down
+        // Place the player on top of the platform
+        this->enemy_->set_position(
+            this->enemy_->get_position().x,
+            plfrBounds.top - this->enemy_->get_global_bounds().height);
+        this->enemy_->reset_velocity_y();
+      }
+      // Check if the player is moving up into the platform
+      else if (this->enemy_->get_velocity().y < 0.f) { // Moving up
+        // Place the player below the platform
+        this->enemy_->set_position(this->player_->get_position().x,
+                                   plfrBounds.top + plfrBounds.height);
+        this->enemy_->reset_velocity_y();
+      }
     }
   }
 }

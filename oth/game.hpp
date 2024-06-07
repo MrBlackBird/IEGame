@@ -27,6 +27,7 @@ private:
   float deltaTime_;
   // for easy enemie movement
   float playerXPosition_;
+  float playerXenemyDistance_;
 
   void init_window();
   void init_player();

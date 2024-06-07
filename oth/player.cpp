@@ -282,16 +282,18 @@ const sf::Vector2f Player::get_position() const {
   return this->sprite_.getPosition();
 }
 
-// FIX: fix sprite colisions
-
 const sf::FloatRect Player::get_global_bounds() const {
+  return this->sprite_.getGlobalBounds();
+}
+
+const sf::FloatRect Player::get_global_bounds_for_platforms() const {
   sf::FloatRect actualGlobalBounds = this->sprite_.getGlobalBounds();
   sf::FloatRect practicalGlobalBounds = actualGlobalBounds;
 
-  practicalGlobalBounds.left -= 100.f;
-  practicalGlobalBounds.top += 0.f;
-  practicalGlobalBounds.width -= 100.f;
-  practicalGlobalBounds.height += 0.f;
+  practicalGlobalBounds.left += 170.f;
+  practicalGlobalBounds.top += 20.f;
+  practicalGlobalBounds.width -= 340.f;
+  practicalGlobalBounds.height -= 20.f;
 
   return practicalGlobalBounds;
 }
@@ -305,6 +307,16 @@ void Player::reset_velocity_y() { this->velocity_.y = 0.f; }
 const sf::Vector2f Player::get_velocity() const { return this->velocity_; }
 
 void Player::set_is_grounded(bool grounded) { this->isGrounded_ = grounded; }
+
+bool Player::get_if_attack_state() {
+  if (this->animationState_ != ATTACK) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+const bool Player::get_is_facing_left() const { return this->facingLeft_; }
 
 void Player::update(float deltaTime) {
   this->movement(deltaTime);
