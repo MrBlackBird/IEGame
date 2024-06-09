@@ -20,6 +20,7 @@ private:
   Player *player_;
   BackGround *backGround_;
   HealthBar *healthBar_;
+  // std::vector<Enemy> enemies_;
   Enemy *enemy_;
   Platform *platforms_;
   std::vector<std::unique_ptr<Object>> objects_;

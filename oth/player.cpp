@@ -39,6 +39,7 @@ void Player::init_sprite() {
   this->currentFrame_ = sf::IntRect(0, 0, 120, 80);
   this->sprite_.setTextureRect(currentFrame_);
   this->sprite_.setScale(3.f, 3.f);
+  this->sprite_.setPosition(650.f, 900.f);
 }
 
 void Player::init_variables() {

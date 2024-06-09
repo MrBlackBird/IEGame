@@ -28,6 +28,8 @@ void Enemy::init_texture() {
 void Enemy::init_sprite() {
   this->sprite_.setTexture(IDLEtexture_);
   this->currentFrame_ = sf::IntRect(0, 0, 24, 32);
+  // maybe necesarry, attack animation is behaving weird
+  this->currentFrameAttack_ = sf::IntRect(0, 0, 24, 32);
   this->sprite_.setTextureRect(currentFrame_);
   this->sprite_.setScale(3.f, 3.f);
 }
@@ -36,7 +38,6 @@ void Enemy::init_variables() {
   this->animationState_ = IDLE_E;
   this->isGrounded_ = true;
   this->groundLevel_ = 900.f;
-  this->distanceToPlayer_ = 0;
   this->health_ = 100;
   this->damage_ = 200;
   this->isAlive_ = true;
@@ -50,14 +51,14 @@ void Enemy::init_animations() {
 void Enemy::init_physics() {
   this->maxVelocity_ = 1000.f;
   this->minVelocity_ = 10.f;
-  this->acceleration_ = 200.f;
+  this->acceleration_ = 100.f;
   this->drag_ = 0.6f;
   this->gravity_ = 1200.f;
   this->maxGravitationalVelocity_ = 10000.f;
 }
 
 void Enemy::init_core() {
-  this->health_ = 200;
+  this->health_ = 200.f;
   this->damage_ = 100;
 }
 
@@ -69,25 +70,29 @@ void Enemy::move(const float xDir, const float yDir, float deltaTime) {
   this->sprite_.move(xDir * acceleration_ * deltaTime, 0);
 }
 
-void Enemy::chase_player(float deltaTime) {
-  if (this->distanceToPlayer_ > 0 && this->distanceToPlayer_ < 200.f) {
-    this->facingLeft_ = true;
-    this->animationState_ = LEFT_E;
-    this->sprite_.move(-1 * acceleration_ * deltaTime, 0);
-  } else if (distanceToPlayer_ < 0 && this->distanceToPlayer_ < -200.f) {
-    this->facingLeft_ = true;
-    this->animationState_ = RIGHT_E;
-    this->sprite_.move(1 * acceleration_ * deltaTime, 0);
+void Enemy::chase_player(float playerXenemyDistace, float deltaTime) {
+  if (this->isAlive_) {
+    if (playerXenemyDistace > 0 && playerXenemyDistace < 500.f) {
+      this->facingLeft_ = false;
+      this->animationState_ = RIGHT_E;
+      this->sprite_.move(1 * acceleration_ * deltaTime, 0);
+    } else if (playerXenemyDistace < 0 && playerXenemyDistace < -500.f) {
+      this->facingLeft_ = true;
+      this->animationState_ = LEFT_E;
+      this->sprite_.move(-1 * acceleration_ * deltaTime, 0);
+    } else {
+      this->animationState_ = IDLE_E;
+    }
+    if (std::abs(playerXenemyDistace) < 70.f) {
+      this->animationState_ = ATTACK_E;
+      this->sprite_.move(0.7f * acceleration_ * deltaTime, 0);
+    }
   } else {
-    this->animationState_ = IDLE_E;
-  }
-  if (this->distanceToPlayer_ < 100.f || this->distanceToPlayer_ > -100.f) {
-    this->animationState_ = ATTACK_E;
-    this->sprite_.move(0.7f * acceleration_ * deltaTime, 0);
+    this->animationState_ = DEATH_E;
   }
 }
 
-// FIX: use bool facingLeft to manage '-' in move functions
+// FIX: fix animation windows - only IDLE is ok
 
 void Enemy::animations() {
   if (this->animationState_ == IDLE_E) {
@@ -127,13 +132,13 @@ void Enemy::animations() {
 
     if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.09f) {
 
-      this->currentFrame_.left += 22.f;
-      if (this->currentFrame_.left >= 264.f) {
-        this->currentFrame_.left = 0;
+      this->currentFrameAttack_.left += 22.f;
+      if (this->currentFrameAttack_.left >= 264.f) {
+        this->currentFrameAttack_.left = 0;
       }
 
       this->animationTimer_.restart();
-      this->sprite_.setTextureRect(this->currentFrame_);
+      this->sprite_.setTextureRect(this->currentFrameAttack_);
     }
 
     this->sprite_.setScale(-3.f, 3.f);
@@ -142,9 +147,9 @@ void Enemy::animations() {
   } else if (this->animationState_ == ATTACK_E) {
     this->sprite_.setTexture(ATTACKtexture_);
 
-    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.1f) {
+    if (this->animationTimer_.getElapsedTime().asSeconds() >= 0.2f) {
 
-      this->currentFrame_.left += 43.f;
+      this->currentFrame_.left += 40.f;
       if (this->currentFrame_.left >= 731.f) {
         this->currentFrame_.left = 0;
       }
@@ -209,10 +214,6 @@ void Enemy::set_position(const float xCord, const float yCord) {
 
 void Enemy::reset_velocity_y() { this->velocity_.y = 0.f; }
 
-void Enemy::update_distance_to_player(float playerXPosition) {
-  this->distanceToPlayer_ = this->get_position().x - playerXPosition;
-}
-
 // FIX: testing taking damage
 void Enemy::take_damage() {
   this->health_ -= 100;
@@ -228,11 +229,11 @@ void Enemy::check_death() {
   }
 }
 
-void Enemy::update(float playerXPosition, float deltaTime) {
+void Enemy::update(float playerXenemyDistance, float deltaTime) {
   if (isAlive_) {
     this->animations();
     this->update_physics(deltaTime);
-    this->update_distance_to_player(playerXPosition);
+    this->chase_player(playerXenemyDistance, deltaTime);
     this->check_death();
   } else {
     this->animations();

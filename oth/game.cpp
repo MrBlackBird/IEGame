@@ -86,7 +86,7 @@ void Game::update_player(float deltaTime) {
 void Game::update_enemy(float deltaTime) {
   // added 'if' for checking for nullptr
   if (this->enemy_) {
-    this->enemy_->update(this->playerXPosition_, deltaTime);
+    this->enemy_->update(this->playerXenemyDistance_, deltaTime);
   }
 }
 

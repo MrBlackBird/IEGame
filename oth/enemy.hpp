@@ -19,6 +19,7 @@ private:
 
   // FIX: animation
   sf::IntRect currentFrame_;
+  sf::IntRect currentFrameAttack_;
   sf::Clock animationTimer_;
   short animationState_;
   bool animationSwitch_;
@@ -37,7 +38,7 @@ private:
 
   // FIX: core
   int damage_;
-  int health_;
+  float health_;
   bool isAlive_;
   sf::Vector2f currentPosition_;
   float distanceToPlayer_;
@@ -65,7 +66,7 @@ public:
 
   // functions
   void move(const float xDir, const float yDir, float deltaTime);
-  void chase_player(float deltaTime);
+  void chase_player(float playerXenemyDistance, float deltaTime);
   void movement(Player &player, float deltaTime);
   void animations();
   void reset_velocity_y();
