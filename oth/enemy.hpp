@@ -20,6 +20,7 @@ private:
   // FIX: animation
   sf::IntRect currentFrame_;
   sf::IntRect currentFrameAttack_;
+  sf::IntRect currentFrameWalk_;
   sf::Clock animationTimer_;
   short animationState_;
   bool animationSwitch_;
@@ -41,7 +42,7 @@ private:
   float health_;
   bool isAlive_;
   sf::Vector2f currentPosition_;
-  float distanceToPlayer_;
+  float playerXenemyDistance_;
 
   void init_variables();
   void init_texture();
@@ -60,13 +61,18 @@ public:
   const sf::FloatRect get_global_bounds() const;
   const sf::FloatRect get_global_bounds_for_platforms() const;
   const sf::Vector2f get_velocity() const;
+  const bool get_is_alive() const;
+  const float get_player_X_enemy_distance() const;
+  void set_player_X_enemy_distance(float pXed);
 
   // modifiers
   void set_position(const float xCord, const float yCord);
+  bool player_hit();
 
   // functions
   void move(const float xDir, const float yDir, float deltaTime);
-  void chase_player(float playerXenemyDistance, float deltaTime);
+  void chase_player(float playerXenemyDistance, float playerYcord,
+                    float deltaTime);
   void movement(Player &player, float deltaTime);
   void animations();
   void reset_velocity_y();
@@ -74,7 +80,7 @@ public:
   void update_physics(float deltaTime);
   void take_damage();
   void check_death();
-  void update(float playerXPosition, float deltaTime);
+  void update(float playerYcord, float deltaTime);
   virtual void draw(sf::RenderTarget &target,
                     sf::RenderStates states) const override;
 };

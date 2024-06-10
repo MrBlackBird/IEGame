@@ -22,6 +22,8 @@ void Game::init_player() {
   auto player = std::make_unique<Player>();
   // get raw player ptr to avoid issues with class-integrated functions
   this->player_ = player.get();
+  // set initial position
+  this->player_->set_position(500.f, 900.f);
   // place player into objects vector
   this->objects_.emplace_back(std::move(player));
 }
@@ -41,9 +43,27 @@ void Game::init_health_bar() {
 }
 
 void Game::init_enemy() {
-  auto enemy = std::make_unique<Enemy>();
-  this->enemy_ = enemy.get();
-  this->objects_.emplace_back(std::move(enemy));
+  auto enemy1 = std::make_unique<Enemy>();
+  this->enemy1_ = enemy1.get();
+  this->enemy1_->set_position(0.f, 0.f);
+  this->enemies_.emplace_back(enemy1_);
+  this->objects_.emplace_back(std::move(enemy1));
+}
+
+void Game::init_enemy_two() {
+  auto enemy2 = std::make_unique<Enemy>();
+  this->enemy2_ = enemy2.get();
+  this->enemy2_->set_position(1200.f, 200.f);
+  this->enemies_.emplace_back(enemy2_);
+  this->objects_.emplace_back(std::move(enemy2));
+}
+
+void Game::init_enemy_three() {
+  auto enemy3 = std::make_unique<Enemy>();
+  this->enemy3_ = enemy3.get();
+  this->enemy3_->set_position(300.f, 900.f);
+  this->enemies_.emplace_back(enemy3_);
+  this->objects_.emplace_back(std::move(enemy3));
 }
 
 void Game::init_platforms() {
@@ -55,27 +75,32 @@ void Game::init_platforms() {
 //  update player parameteres
 void Game::update_player(float deltaTime) {
   // added 'if' for checking for nullptr
-  if (this->player_) {
-    this->player_->update(deltaTime);
+  for (auto &enemy : enemies_) {
+    if (this->player_) {
+      this->player_->update(deltaTime);
 
-    // update global player position
-    this->playerXPosition_ = this->player_->get_position().x;
-    this->playerXenemyDistance_ =
-        this->player_->get_position().x - this->enemy_->get_position().x;
+      // update global player position
+      this->playerXPosition_ = this->player_->get_position().x;
+      this->playerXenemyDistance_ =
+          this->player_->get_position().x - enemy->get_position().x;
 
-    // attacking
-    if (this->player_->get_if_attack_state() == true) {
-      // check for enemy in range
-      if (this->playerXenemyDistance_ < 0 &&
-          this->player_->get_is_facing_left() == false) {
-        if (playerXenemyDistance_ > -100.f) {
-          // count attack
-          this->enemy_->take_damage();
-        }
-      } else if (this->playerXenemyDistance_ > 0 &&
-                 this->player_->get_is_facing_left() == true) {
-        if (playerXenemyDistance_ < 100.f) {
-          this->enemy_->take_damage();
+      enemy->set_player_X_enemy_distance(this->player_->get_position().x -
+                                         enemy->get_position().x);
+
+      // attacking
+      if (this->player_->get_if_attack_state() == true) {
+        // check for enemy in range
+        if (this->playerXenemyDistance_ < 0 &&
+            this->player_->get_is_facing_left() == false) {
+          if (playerXenemyDistance_ > -100.f) {
+            // count attack
+            enemy->take_damage();
+          }
+        } else if (this->playerXenemyDistance_ > 0 &&
+                   this->player_->get_is_facing_left() == true) {
+          if (playerXenemyDistance_ < 100.f) {
+            enemy->take_damage();
+          }
         }
       }
     }
@@ -85,9 +110,28 @@ void Game::update_player(float deltaTime) {
 //  update enemy parameteres
 void Game::update_enemy(float deltaTime) {
   // added 'if' for checking for nullptr
-  if (this->enemy_) {
-    this->enemy_->update(this->playerXenemyDistance_, deltaTime);
+  for (auto &enemy : this->enemies_) {
+    if (enemy) {
+      enemy->update(this->player_->get_position().y, deltaTime);
+    }
+    bool kill = enemy->player_hit();
+    if (kill) {
+      this->player_killed(true);
+    }
   }
+
+  // FIX: intended to delete the killed enemy but run into issues
+
+  //  for (auto &obj : this->objects_) {
+  //    auto enemyTemp = dynamic_cast<Enemy *>(obj.get());
+  //    if (enemyTemp->get_is_alive() == false) {
+  //      auto it =
+  //          std::find(this->objects_.begin(), this->objects_.end(),
+  //          enemyTemp);
+  //      this->objects_.erase(it); // remove the element from its current
+  //      position
+  //    }
+  //  }
 }
 
 void Game::update_platforms() {}
@@ -95,7 +139,9 @@ void Game::update_platforms() {}
 // draws all game objects from the objects_ vector of unique_ptr's
 void Game::render_objects() {
   for (auto &obj : this->objects_) {
-    obj->draw(this->window_, sf::RenderStates::Default);
+    if (obj) {
+      obj->draw(this->window_, sf::RenderStates::Default);
+    }
   }
 }
 
@@ -155,22 +201,35 @@ void Game::updateCollision() {
               this->player_->get_global_bounds().height);
     }
 
+    // FIX: left and right window bounds not working properly
+
+    //    if (this->player_->get_position().x +
+    //            this->player_->get_global_bounds().width >=
+    //        this->window_.getSize().x) {
+    //
+    //      this->player_->set_position(
+    //          this->window_.getSize().x -
+    //              this->player_->get_global_bounds_for_platforms().left +
+    //              this->player_->get_global_bounds().width,
+    //          this->player_->get_position().y);
+    //    }
+
     // for platforms
     for (auto &plfrBounds : this->platforms_->get_platform_bounds()) {
       if (this->player_->get_global_bounds_for_platforms().intersects(
               plfrBounds)) {
-        // Check if the player is falling down onto the platform
+        // check if the player is falling down onto the platform
         if (this->player_->get_velocity().y > 0.f) { // Falling down
-          // Place the player on top of the platform
+          // place the player on top of the platform
           this->player_->set_position(
               this->player_->get_position().x,
               plfrBounds.top - this->player_->get_global_bounds().height);
           this->player_->reset_velocity_y();
           this->player_->set_is_grounded(true);
         }
-        // Check if the player is moving up into the platform
+        // check if the player is moving up into the platform
         else if (this->player_->get_velocity().y < 0.f) { // Moving up
-          // Place the player below the platform
+          // place the player below the platform
           this->player_->set_position(this->player_->get_position().x,
                                       plfrBounds.top + plfrBounds.height);
           this->player_->reset_velocity_y();
@@ -180,35 +239,35 @@ void Game::updateCollision() {
   }
 
   // for enemie
-  if (this->enemy_) {
-    if (this->enemy_->get_position().y +
-            this->enemy_->get_global_bounds().height >
-        this->window_.getSize().y) {
+  for (auto &enemy : this->enemies_) {
+    if (enemy && enemy->get_is_alive() == true) {
+      if (enemy->get_position().y + enemy->get_global_bounds().height >
+          this->window_.getSize().y) {
 
-      this->enemy_->reset_velocity_y();
-      this->enemy_->set_position(this->enemy_->get_position().x,
-                                 this->window_.getSize().y -
-                                     this->enemy_->get_global_bounds().height);
-    }
-  }
-  // for platforms
-  for (auto &plfrBounds : this->platforms_->get_platform_bounds()) {
-    if (this->enemy_->get_global_bounds_for_platforms().intersects(
-            plfrBounds)) {
-      // Check if the player is falling down onto the platform
-      if (this->enemy_->get_velocity().y > 0.f) { // Falling down
-        // Place the player on top of the platform
-        this->enemy_->set_position(
-            this->enemy_->get_position().x,
-            plfrBounds.top - this->enemy_->get_global_bounds().height);
-        this->enemy_->reset_velocity_y();
+        enemy->reset_velocity_y();
+        enemy->set_position(enemy->get_position().x,
+                            this->window_.getSize().y -
+                                enemy->get_global_bounds().height);
       }
-      // Check if the player is moving up into the platform
-      else if (this->enemy_->get_velocity().y < 0.f) { // Moving up
-        // Place the player below the platform
-        this->enemy_->set_position(this->player_->get_position().x,
-                                   plfrBounds.top + plfrBounds.height);
-        this->enemy_->reset_velocity_y();
+    }
+    // for platforms
+    for (auto &plfrBounds : this->platforms_->get_platform_bounds()) {
+      if (enemy->get_global_bounds_for_platforms().intersects(plfrBounds)) {
+        // Check if the player is falling down onto the platform
+        if (enemy->get_velocity().y > 0.f) { // Falling down
+          // Place the player on top of the platform
+          enemy->set_position(enemy->get_position().x,
+                              plfrBounds.top -
+                                  enemy->get_global_bounds().height);
+          enemy->reset_velocity_y();
+        }
+        // Check if the player is moving up into the platform
+        else if (enemy->get_velocity().y < 0.f) { // Moving up
+          // Place the player below the platform
+          enemy->set_position(this->player_->get_position().x,
+                              plfrBounds.top + plfrBounds.height);
+          enemy->reset_velocity_y();
+        }
       }
     }
   }
@@ -224,10 +283,37 @@ void Game::render() {
   this->window_.display();
 }
 
+void Game::player_killed(bool killed) { this->player_->isDead_ = killed; }
+
+bool Game::get_if_player_dead() { return this->player_->get_is_dead(); }
+
+void Game::game_over() {
+  // clear screen
+  this->window_.clear();
+
+  // set game over message and its font
+
+  sf::Font font;
+  font.loadFromFile("/textures/0xProtoNerdFont-Regular.ttf");
+  sf::Text text;
+  sf::Text score;
+  text.setFont(font);
+  text.setString("GAME OVER");
+  text.setCharacterSize(24);
+  text.setFillColor(sf::Color::White);
+  text.setPosition(100, 100);
+
+  // show game over screen
+  this->window_.draw(text);
+  this->window_.draw(score);
+}
+
 Game::Game() {
   this->init_window();
   this->init_background();
   this->init_enemy();
+  this->init_enemy_two();
+  this->init_enemy_three();
   this->init_player();
   this->init_platforms();
 }

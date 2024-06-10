@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 #include <time.h>
 
 int main() {
@@ -12,8 +13,12 @@ int main() {
   Game game;
 
   while (game.get_window().isOpen()) {
+    // if (game.get_if_player_dead() == false) {
     game.update();
     game.render();
+    // } else {
+    // game.game_over();
+    //}
   }
 
   return 0;

@@ -20,8 +20,10 @@ private:
   Player *player_;
   BackGround *backGround_;
   HealthBar *healthBar_;
-  // std::vector<Enemy> enemies_;
-  Enemy *enemy_;
+  std::vector<Enemy *> enemies_;
+  Enemy *enemy1_;
+  Enemy *enemy2_;
+  Enemy *enemy3_;
   Platform *platforms_;
   std::vector<std::unique_ptr<Object>> objects_;
   sf::Clock clock_;
@@ -35,6 +37,8 @@ private:
   void init_background();
   void init_health_bar();
   void init_enemy();
+  void init_enemy_two();
+  void init_enemy_three();
   void init_platforms();
 
 public:
@@ -51,6 +55,9 @@ public:
   void update_platforms();
   void render_objects();
   void updateCollision();
+  bool get_if_player_dead();
+  void player_killed(bool killed);
+  void game_over();
 };
 
 #endif // GAME_HPP

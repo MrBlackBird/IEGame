@@ -1,5 +1,6 @@
 #include "player.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window.hpp>
@@ -46,6 +47,7 @@ void Player::init_variables() {
   this->animationState_ = IDLE;
   this->isGrounded_ = true;
   this->groundLevel_ = 900.f;
+  this->isDead_ = false;
 }
 
 void Player::init_animations() {
@@ -56,10 +58,10 @@ void Player::init_animations() {
 void Player::init_physics() {
   this->maxVelocity_ = 1000.f;
   this->minVelocity_ = 10.f;
-  this->acceleration_ = 350.f;
+  this->acceleration_ = 150.f;
   this->drag_ = 0.6f;
-  this->gravity_ = 2000.f;
-  this->maxGravitationalVelocity_ = 10000.f;
+  this->gravity_ = 1000.f;
+  this->maxGravitationalVelocity_ = 2000.f;
 }
 
 void Player::init_core() {
@@ -99,7 +101,7 @@ void Player::movement(float deltaTime) {
       this->animationState_ = ROLL;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
                this->isGrounded_) {
-      this->velocity_.y = -1000.f;
+      this->velocity_.y = -750.f;
       this->isGrounded_ = false;
       this->animationState_ = JUMP;
     } else {
@@ -116,7 +118,7 @@ void Player::movement(float deltaTime) {
       this->animationState_ = ROLL;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
                this->isGrounded_) {
-      this->velocity_.y = -1000.f;
+      this->velocity_.y = -750.f;
       this->isGrounded_ = false;
       this->animationState_ = JUMP;
     } else {
@@ -126,7 +128,7 @@ void Player::movement(float deltaTime) {
 
   } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
              this->isGrounded_) {
-    this->velocity_.y = -1000.f;
+    this->velocity_.y = -750.f;
     this->isGrounded_ = false;
     this->animationState_ = JUMP;
 
@@ -318,6 +320,18 @@ bool Player::get_if_attack_state() {
 }
 
 const bool Player::get_is_facing_left() const { return this->facingLeft_; }
+
+void Player::check_death() {
+  if (this->health_ <= 0) {
+    this->isDead_ = true;
+  } else {
+    this->isDead_ = false;
+  }
+}
+
+const bool Player::get_is_dead() const { return this->isDead_; }
+
+void Player::take_damage() { this->health_ -= 1000; }
 
 void Player::update(float deltaTime) {
   this->movement(deltaTime);

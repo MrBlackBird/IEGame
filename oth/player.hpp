@@ -62,11 +62,14 @@ public:
   const sf::FloatRect get_global_bounds_for_platforms() const;
   const sf::Vector2f get_velocity() const;
   const bool get_is_facing_left() const;
+  const bool get_is_dead() const;
 
   // modifiers
   void set_position(const float xCord, const float yCord);
   void reset_velocity_y();
   void set_is_grounded(bool grounded);
+  void take_damage();
+  bool isDead_;
 
   // functions
   void reset_animation_timer();
@@ -75,6 +78,7 @@ public:
   void animations();
   void update_physics(float deltaTime);
   bool get_if_attack_state();
+  void check_death();
   void update(float deltaTime);
   // void render(sf::RenderTarget &target);
   virtual void draw(sf::RenderTarget &target,
