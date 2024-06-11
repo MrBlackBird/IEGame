@@ -4,6 +4,7 @@
 #include <iostream>
 
 void BackGround::init_texture() {
+  // loading texutres
   if (!this->NIGHTtexture_.loadFromFile(
           "textures/Enviroment/Medieval_Castle_Asset_Pack/Background/"
           "layer_1.png")) {
@@ -22,6 +23,7 @@ void BackGround::init_texture() {
 }
 
 void BackGround::init_sprite() {
+  // setting texture to sprite
   this->NIGHTsprite_.setTexture(this->NIGHTtexture_);
   this->NIGHTsprite_.setScale(sf::Vector2f(4.5f, 5.f));
   // this->CITYsprite_.setTexture(this->NIGHTtexture_);
@@ -32,6 +34,7 @@ void BackGround::init_sprite() {
 
 void BackGround::update() {}
 
+// overloaded drawing
 void BackGround::draw(sf::RenderTarget &target, sf::RenderStates states) const {
   target.draw(this->NIGHTsprite_, states);
   // target.draw(this->CITYsprite_, states);

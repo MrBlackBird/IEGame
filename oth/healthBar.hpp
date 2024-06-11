@@ -4,6 +4,7 @@
 
 class HealthBar : public Object {
 private:
+  // NOTE: core
   sf::Texture BASEtexture_;
   sf::Texture BORDERtexture_;
   sf::Texture DAMAGEtexture_;

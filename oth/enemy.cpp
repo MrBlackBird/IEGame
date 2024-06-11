@@ -27,6 +27,7 @@ void Enemy::init_texture() {
 }
 
 void Enemy::init_sprite() {
+  // setting core sprite values
   this->sprite_.setTexture(IDLEtexture_);
   this->currentFrame_ = sf::IntRect(0, 0, 24, 32);
   this->currentFrameWalk_ = sf::IntRect(0, 0, 22, 33);
@@ -36,6 +37,7 @@ void Enemy::init_sprite() {
 }
 
 void Enemy::init_variables() {
+  // setting core enemy variables
   this->animationState_ = IDLE_E;
   this->isGrounded_ = true;
   this->groundLevel_ = 900.f;
@@ -44,11 +46,13 @@ void Enemy::init_variables() {
   this->isAlive_ = true;
 }
 
+// for smoother animation transitions
 void Enemy::init_animations() {
   this->animationTimer_.restart();
   this->animationSwitch_ = true;
 }
 
+// set core phisics values
 void Enemy::init_physics() {
   this->maxVelocity_ = 1000.f;
   this->minVelocity_ = 10.f;
@@ -71,6 +75,7 @@ void Enemy::move(const float xDir, const float yDir, float deltaTime) {
   this->sprite_.move(xDir * acceleration_ * deltaTime, 0);
 }
 
+// automated enemy movement
 void Enemy::chase_player(float playerXenemyDistace, float playerYcord,
                          float deltaTime) {
   if (this->isAlive_) {
@@ -114,6 +119,7 @@ void Enemy::chase_player(float playerXenemyDistace, float playerYcord,
 
 bool Enemy::player_hit() { return true; }
 
+// manages all enemy animaitons and texture switching
 void Enemy::animations() {
   if (this->animationState_ == IDLE_E) {
     this->sprite_.setTexture(IDLEtexture_);
@@ -161,6 +167,7 @@ void Enemy::animations() {
       this->sprite_.setTextureRect(this->currentFrameWalk_);
     }
 
+    // mirroing sprite when moving left
     this->sprite_.setScale(-3.f, 3.f);
     this->sprite_.setOrigin(this->sprite_.getGlobalBounds().width / 3.f, 0.f);
 
@@ -213,6 +220,8 @@ const sf::FloatRect Enemy::get_global_bounds() const {
   return this->sprite_.getGlobalBounds();
 }
 
+// adjusted for correct collision detection - changing sprite to visual player
+// bounds
 const sf::FloatRect Enemy::get_global_bounds_for_platforms() const {
   sf::FloatRect actualGlobalBounds = this->sprite_.getGlobalBounds();
   sf::FloatRect practicalGlobalBounds = actualGlobalBounds;
@@ -261,6 +270,7 @@ void Enemy::set_player_X_enemy_distance(float pXed) {
 }
 
 void Enemy::update(float playerYcord, float deltaTime) {
+  // only updated living enemies
   if (isAlive_) {
     this->animations();
     this->update_physics(deltaTime);

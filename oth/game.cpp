@@ -45,6 +45,7 @@ void Game::init_health_bar() {
 void Game::init_enemy() {
   auto enemy1 = std::make_unique<Enemy>();
   this->enemy1_ = enemy1.get();
+  // set initial enemy position
   this->enemy1_->set_position(0.f, 0.f);
   this->enemies_.emplace_back(enemy1_);
   this->objects_.emplace_back(std::move(enemy1));
@@ -143,6 +144,7 @@ void Game::update_score() {
   }
 }
 
+// for adding levels
 void Game::update_platforms() {}
 
 // draws all game objects from the objects_ vector of unique_ptr's
@@ -286,18 +288,20 @@ void Game::updateCollision() {
 void Game::render() {
   this->window_.clear();
 
-  // render stuff
+  // render objects
   this->render_objects();
 
   this->window_.display();
 }
 
+// check if player is dead
 void Game::player_killed(bool killed) { this->player_->isDead_ = killed; }
 
 bool Game::get_if_player_dead() { return this->player_->get_is_dead(); }
 
 int Game::get_score() { return this->score_; }
 
+// game over message
 void Game::game_over() {
   // clear screen
   this->window_.clear();

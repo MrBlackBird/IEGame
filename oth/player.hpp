@@ -20,7 +20,7 @@ private:
   sf::Texture ROLLtexture_;
   sf::Texture ATTACKtexture_;
 
-  // FIX: animation
+  // NOTE: animation
   sf::IntRect currentFrame_;
   sf::Clock animationTimer_;
   short animationState_;
@@ -29,7 +29,7 @@ private:
   bool isGrounded_;
   float groundLevel_;
 
-  // FIX: physics
+  // NOTE: physics
   sf::Vector2f velocity_;
   float maxVelocity_;
   float minVelocity_;
@@ -38,7 +38,7 @@ private:
   float gravity_;
   float maxGravitationalVelocity_;
 
-  // FIX: core
+  // NOTE: core
   int damage_;
   int health_;
   sf::Vector2f currentPosition_;

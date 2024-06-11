@@ -36,6 +36,7 @@ void Player::init_texture() {
 }
 
 void Player::init_sprite() {
+  // setting core sprite values
   this->sprite_.setTexture(IDLEtexture_);
   this->currentFrame_ = sf::IntRect(0, 0, 120, 80);
   this->sprite_.setTextureRect(currentFrame_);
@@ -44,6 +45,7 @@ void Player::init_sprite() {
 }
 
 void Player::init_variables() {
+  // set core player variables
   this->animationState_ = IDLE;
   this->isGrounded_ = true;
   this->groundLevel_ = 900.f;
@@ -51,11 +53,13 @@ void Player::init_variables() {
 }
 
 void Player::init_animations() {
+  // initial animation condition
   this->animationTimer_.restart();
   this->animationSwitch_ = true;
 }
 
 void Player::init_physics() {
+  // set core physics values
   this->maxVelocity_ = 1000.f;
   this->minVelocity_ = 10.f;
   this->acceleration_ = 150.f;
@@ -69,26 +73,16 @@ void Player::init_core() {
   this->damage_ = 400;
 }
 
-// void Player::render(sf::RenderTarget &target) { target.draw(this->sprite_); }
-
 void Player::draw(sf::RenderTarget &target, sf::RenderStates states) const {
   target.draw(this->sprite_, states);
 }
 
+// manages player sprite movement
 void Player::move(const float xDir, const float yDir, float deltaTime) {
-  // acceleration
-  //  this->velocity_.x += xDir * this->acceleration_ * deltaTime;
   this->sprite_.move(xDir * acceleration_ * deltaTime, 0);
-
-  // limit velocity
-  //  if (std::abs(this->velocity_.x) > this->maxVelocity_) {
-  //    this->velocity_.x =
-  //        this->maxVelocity_ * ((this->velocity_.x < 0.f) ? -1.f : 1.f);
-  //  }
 }
 
-// FIX: use bool facingLeft to manage '-' in move functions
-
+// manages player animation states and uses move func
 void Player::movement(float deltaTime) {
   this->animationState_ = IDLE;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -145,9 +139,7 @@ void Player::movement(float deltaTime) {
   }
 }
 
-// FIX: fix the bug which allows for rolling right while moving left when
-// pressing A and D at the same time
-
+// manages animations
 void Player::animations() {
   if (this->animationState_ == IDLE) {
     this->sprite_.setTexture(IDLEtexture_);
@@ -266,6 +258,7 @@ void Player::update_physics(float deltaTime) {
   }
 }
 
+// for smooth animation changing
 const bool Player::get_animation_switch() {
   bool tempAnimSwitch = this->animationSwitch_;
 
@@ -276,6 +269,7 @@ const bool Player::get_animation_switch() {
   return tempAnimSwitch;
 }
 
+// for smooth animation changing
 void Player::reset_animation_timer() {
   this->animationTimer_.restart();
   this->animationSwitch_ = true;
@@ -289,6 +283,7 @@ const sf::FloatRect Player::get_global_bounds() const {
   return this->sprite_.getGlobalBounds();
 }
 
+// adjust player bouds for correct collision detection
 const sf::FloatRect Player::get_global_bounds_for_platforms() const {
   sf::FloatRect actualGlobalBounds = this->sprite_.getGlobalBounds();
   sf::FloatRect practicalGlobalBounds = actualGlobalBounds;
@@ -311,6 +306,7 @@ const sf::Vector2f Player::get_velocity() const { return this->velocity_; }
 
 void Player::set_is_grounded(bool grounded) { this->isGrounded_ = grounded; }
 
+// check for sufficient attacking conditions
 bool Player::get_if_attack_state() {
   if (this->animationState_ != ATTACK) {
     return false;

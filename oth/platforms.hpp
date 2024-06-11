@@ -6,6 +6,7 @@
 
 class Platform : public Object {
 private:
+  // NOTE: core
   sf::Texture texture_;
   sf::Sprite sprite_;
   std::vector<sf::Vector2f> positions_;
@@ -18,6 +19,7 @@ private:
   void init_platforms();
 
 public:
+  // constructor / destructor
   Platform();
   ~Platform();
 

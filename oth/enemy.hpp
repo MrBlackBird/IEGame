@@ -17,7 +17,7 @@ private:
   sf::Texture ATTACKtexture_;
   sf::Texture DEATHtexture_;
 
-  // FIX: animation
+  // NOTE: animation
   sf::IntRect currentFrame_;
   sf::IntRect currentFrameAttack_;
   sf::IntRect currentFrameWalk_;
@@ -28,7 +28,7 @@ private:
   bool isGrounded_;
   float groundLevel_;
 
-  // FIX: physics
+  // NOTE: physics
   sf::Vector2f velocity_;
   float maxVelocity_;
   float minVelocity_;
@@ -37,13 +37,14 @@ private:
   float gravity_;
   float maxGravitationalVelocity_;
 
-  // FIX: core
+  // NOTE: core
   int damage_;
   float health_;
   bool isAlive_;
   sf::Vector2f currentPosition_;
   float playerXenemyDistance_;
 
+  // init all necessary things
   void init_variables();
   void init_texture();
   void init_sprite();

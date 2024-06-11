@@ -16,7 +16,7 @@ void Platform::init_positions() {}
 void Platform::init_platforms() {
   sf::RectangleShape *plfrm1 =
       new sf::RectangleShape(sf::Vector2f(150.f, 40.f));
-  plfrm1->setPosition(sf::Vector2f(0.f, 700.f));
+  plfrm1->setPosition(sf::Vector2f(0.f, 700.f)); // setting platform position
   plfrm1->setFillColor(sf::Color::Black);
   this->platformsBounds_.emplace_back(plfrm1->getGlobalBounds());
   this->platforms_.emplace_back(plfrm1);
@@ -85,6 +85,7 @@ void Platform::init_platforms() {
   this->platforms_.emplace_back(plfrm10);
 }
 
+// overloading drawing
 void Platform::draw(sf::RenderTarget &target, sf::RenderStates states) const {
   for (auto &platform : this->platforms_) {
     target.draw(*platform);

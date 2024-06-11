@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+// for polymorphism
 class Object : public sf::Drawable {
 public:
   virtual void draw(sf::RenderTarget &target,

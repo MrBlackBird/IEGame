@@ -15,8 +15,7 @@
 
 class Game {
 private:
-  sf::RenderWindow window_;
-  sf::Event event_;
+  // NOTE: objects
   Player *player_;
   BackGround *backGround_;
   HealthBar *healthBar_;
@@ -26,12 +25,17 @@ private:
   Enemy *enemy3_;
   Platform *platforms_;
   std::vector<std::unique_ptr<Object>> objects_;
+
+  // NOTE: core
+  sf::RenderWindow window_;
+  sf::Event event_;
   sf::Clock clock_;
   float deltaTime_;
-  // for easy enemie movement
-  float playerXPosition_;
-  float playerXenemyDistance_;
   int score_;
+
+  // NOTE: useful variables
+  float playerXPosition_; // for easy enemie movement
+  float playerXenemyDistance_;
 
   void init_window();
   void init_player();
@@ -47,6 +51,10 @@ public:
   Game();
   virtual ~Game();
 
+  // getters
+  bool get_if_player_dead();
+  int get_score();
+
   // functions
   const sf::RenderWindow &get_window() const;
   void update();
@@ -56,9 +64,7 @@ public:
   void update_platforms();
   void render_objects();
   void updateCollision();
-  bool get_if_player_dead();
   void update_score();
-  int get_score();
   void player_killed(bool killed);
   void game_over();
 };

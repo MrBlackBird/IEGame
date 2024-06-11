@@ -3,6 +3,7 @@
 #include <iostream>
 
 void HealthBar::init_texture() {
+  // creat multi-layer textures
   if (!this->BASEtexture_.loadFromFile(
           "textures/Enviroment/Medieval_Castle_Asset_Pack/HUD/"
           "health_bar.png")) {
@@ -20,6 +21,7 @@ void HealthBar::init_texture() {
 }
 
 void HealthBar::init_sprite() {
+  // set core sprite values
   this->BASEsprite_.setTexture(this->BASEtexture_);
   this->BASEsprite_.setPosition(0.f, 0.f);
   this->BASEsprite_.setScale(1.f, 1.f);
