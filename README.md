@@ -24,4 +24,4 @@ Ignore the 'dump' folder, it's a placeholder for temporary files/ideas.
 
 'S' - attack
 
-'SPACE'- roll
+'SPACE' - roll
