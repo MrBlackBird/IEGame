@@ -16,12 +16,12 @@ Ignore the 'dump' folder, it's a placeholder for temporary files/ideas.
 
 ## Controls
 
-W - jump
+'W' - jump
 
-A - move left
+'A' - move left
 
-D - move right
+'D' - move right
 
-S - attack
+'S' - attack
 
-<SPACE> - roll
+'SPACE'- roll
