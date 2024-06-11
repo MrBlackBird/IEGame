@@ -17,7 +17,11 @@ Ignore the 'dump' folder, it's a placeholder for temporary files/ideas.
 ## Controls
 
 W - jump
+
 A - move left
+
 D - move right
+
 S - attack
+
 <SPACE> - roll
