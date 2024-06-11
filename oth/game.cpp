@@ -134,6 +134,15 @@ void Game::update_enemy(float deltaTime) {
   //  }
 }
 
+void Game::update_score() {
+  this->score_ = 0;
+  for (auto &enemy : this->enemies_) {
+    if (enemy->get_is_alive() == false) {
+      this->score_ += 200;
+    }
+  }
+}
+
 void Game::update_platforms() {}
 
 // draws all game objects from the objects_ vector of unique_ptr's
@@ -286,6 +295,8 @@ void Game::render() {
 void Game::player_killed(bool killed) { this->player_->isDead_ = killed; }
 
 bool Game::get_if_player_dead() { return this->player_->get_is_dead(); }
+
+int Game::get_score() { return this->score_; }
 
 void Game::game_over() {
   // clear screen

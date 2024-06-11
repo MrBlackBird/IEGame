@@ -20,6 +20,9 @@ int main() {
     // game.game_over();
     //}
   }
+  game.update_score();
+  std::cout << "GAME OVER" << std::endl;
+  std::cout << "Score: " << game.get_score() << std::endl;
 
   return 0;
 }

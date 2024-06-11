@@ -236,7 +236,6 @@ void Enemy::reset_velocity_y() { this->velocity_.y = 0.f; }
 void Enemy::take_damage() {
   if (this->isAlive_) {
     this->health_ -= 100;
-    std::cout << "took damage" << " " << this->health_ << std::endl;
   }
 }
 

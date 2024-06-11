@@ -31,6 +31,7 @@ private:
   // for easy enemie movement
   float playerXPosition_;
   float playerXenemyDistance_;
+  int score_;
 
   void init_window();
   void init_player();
@@ -56,6 +57,8 @@ public:
   void render_objects();
   void updateCollision();
   bool get_if_player_dead();
+  void update_score();
+  int get_score();
   void player_killed(bool killed);
   void game_over();
 };
